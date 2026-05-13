@@ -119,3 +119,16 @@ export function initRouter() {
         }
     );
 }
+try {
+    view(root);
+} catch (err) {
+
+    console.error(err);
+
+    root.innerHTML = `
+        <div style="color:white;padding:20px;">
+            <h2>Runtime Crash</h2>
+            <pre>${err.message}</pre>
+        </div>
+    `;
+}
