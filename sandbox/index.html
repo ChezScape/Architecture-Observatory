@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Observatory Sandbox</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: monospace;
+    background: #05060a;
+    color: #5eead4;
+    padding: 20px;
+}
+
+textarea {
+    width: 100%;
+    height: 200px;
+    background: #0b1430;
+    color: white;
+    border: 1px solid #333;
+    padding: 10px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #5eead4;
+    background: transparent;
+    color: #5eead4;
+    cursor: pointer;
+}
+
+pre {
+    margin-top: 15px;
+    background: rgba(255,255,255,0.05);
+    padding: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Runtime Sandbox</h2>
+
+<p>Inject simulated runtime events</p>
+
+<textarea id="input">
+{ "type": "CLICK", "value": "test_event" }
+</textarea>
+
+<br/>
+
+<button onclick="run()">Inject Event</button>
+
+<pre id="out"></pre>
+
+<script>
+function run() {
+
+    const input = document.getElementById("input").value;
+
+    try {
+        const event = JSON.parse(input);
+
+        document.getElementById("out").innerText =
+            "Injected Event:\n\n" +
+            JSON.stringify(event, null, 2);
+
+        console.log("[Sandbox Event]", event);
+
+    } catch (e) {
+        document.getElementById("out").innerText = "Invalid JSON";
+    }
+}
+</script>
+
+</body>
+</html>
