@@ -1,16 +1,23 @@
 // ========================================
-// OBSERVATORY ROUTER
+// ARCHITECTURE OBSERVATORY
+// APPLICATION ROUTER
 // ========================================
 
-import { mountLandingView } from "./landing/landingView.js";
+import { mountLandingView }
+    from "./landing/landingView.js";
 
-import { mountSandboxView } from "./sandbox/sandboxView.js";
+import { mountRuntimeView }
+    from "./auditor-core/runtimeView.js";
 
-import { mountRuntimeView } from "./auditor-core/runtimeView.js";
+import { mountSandboxView }
+    from "./sandbox/sandboxView.js";
 
-// ----------------------------------------
-// ROUTE TABLE
-// ----------------------------------------
+import { Trace }
+    from "./auditor-core/runtime/tracer.js";
+
+// ========================================
+// ROUTES
+// ========================================
 
 const routes = {
 
@@ -21,50 +28,74 @@ const routes = {
     sandbox: mountSandboxView
 };
 
-// ----------------------------------------
+// ========================================
 // NAVIGATION
-// ----------------------------------------
+// ========================================
 
 export function navigate(route) {
 
-    const root = document.getElementById("app-root");
+    const root =
+        document.getElementById("app-root");
 
     if (!root) return;
-
-    root.innerHTML = "";
 
     const view = routes[route];
 
     if (!view) {
+
         root.innerHTML = `
-            <div style="padding:20px">
-                Unknown route: ${route}
+            <div class="error-view">
+                Unknown Route: ${route}
             </div>
         `;
+
         return;
     }
 
-    history.pushState({}, "", `#${route}`);
+    // CLEANUP
+    root.innerHTML = "";
 
+    // TRACE
+    Trace.log({
+        type: "ROUTE_CHANGE",
+        source: "Router",
+        message: `Navigated to ${route}`
+    });
+
+    // URL
+    history.pushState(
+        {},
+        "",
+        `#${route}`
+    );
+
+    // MOUNT
     view(root);
 }
 
-// ----------------------------------------
-// INITIAL LOAD
-// ----------------------------------------
+// ========================================
+// INIT
+// ========================================
 
 export function initRouter() {
 
     const route =
-        location.hash.replace("#", "") || "landing";
+        location.hash
+            .replace("#", "")
+            || "landing";
 
     navigate(route);
 
-    window.addEventListener("popstate", () => {
+    window.addEventListener(
+        "popstate",
+        () => {
 
-        const route =
-            location.hash.replace("#", "") || "landing";
+            const route =
+                location.hash
+                    .replace("#", "")
+                    || "landing";
 
-        navigate(route);
-    });
+            navigate(route);
+        }
+    );
 }
