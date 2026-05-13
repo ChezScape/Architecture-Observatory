@@ -1,121 +1,76 @@
 // ========================================
-// GLOBAL EVENT BUS
+// EVENT BUS
 // ========================================
 
-const listeners = new Map();
-
-const wildcardListeners = new Set();
+import { Trace }
+    from "./tracer.js";
 
 export const Bus = {
 
-    // ====================================
-    // EMIT EVENT
-    // ====================================
+    channels: {},
 
-    emit(event = {}) {
+    init() {
 
-        if (!event.type) {
-            return;
+        console.log(
+            "[Bus] Online"
+        );
+    },
+
+    on(event, callback) {
+
+        if (!this.channels[event]) {
+
+            this.channels[event] = [];
         }
 
-        // --------------------------------
-        // Exact listeners
-        // --------------------------------
+        this.channels[event]
+            .push(callback);
 
-        const handlers = listeners.get(event.type);
-
-        if (handlers) {
-
-            handlers.forEach((handler) => {
-
-                try {
-                    handler(event);
-                }
-                catch (err) {
-                    console.error(
-                        "Bus handler failed",
-                        err
-                    );
-                }
-
-            });
-        }
-
-        // --------------------------------
-        // Wildcard listeners
-        // --------------------------------
-
-        wildcardListeners.forEach((handler) => {
-
-            try {
-                handler(event);
-            }
-            catch (err) {
-                console.error(
-                    "Wildcard handler failed",
-                    err
-                );
-            }
-
+        Trace.log({
+            type: "BUS_SUBSCRIBE",
+            source: "Bus",
+            message: `Subscribed to ${event}`
         });
     },
 
-    // ====================================
-    // ADD LISTENER
-    // ====================================
+    emit(event, payload = {}) {
 
-    on(type, callback) {
+        const listeners =
+            this.channels[event] || [];
 
-        // Wildcard support
-        if (type === "*") {
+        Trace.log({
+            type: "BUS_EMIT",
+            source: "Bus",
+            message: `Event emitted: ${event}`,
+            payload
+        });
 
-            wildcardListeners.add(callback);
+        for (const callback of listeners) {
 
-            return;
+            try {
+
+                callback(payload);
+
+            } catch (err) {
+
+                Trace.error({
+                    type: "BUS_HANDLER_FAILURE",
+                    source: "Bus",
+                    message: err.message
+                });
+            }
         }
-
-        if (!listeners.has(type)) {
-
-            listeners.set(type, new Set());
-        }
-
-        listeners
-            .get(type)
-            .add(callback);
     },
 
-    // ====================================
-    // REMOVE LISTENER
-    // ====================================
+    clear(event) {
 
-    off(type, callback) {
+        if (event) {
 
-        if (type === "*") {
-
-            wildcardListeners.delete(callback);
+            delete this.channels[event];
 
             return;
         }
 
-        if (!listeners.has(type)) {
-            return;
-        }
-
-        listeners
-            .get(type)
-            .delete(callback);
-    },
-
-    // ====================================
-    // DEBUG
-    // ====================================
-
-    listenerCount(type) {
-
-        if (type === "*") {
-            return wildcardListeners.size;
-        }
-
-        return listeners.get(type)?.size || 0;
+        this.channels = {};
     }
 };
