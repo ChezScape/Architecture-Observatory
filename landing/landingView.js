@@ -1,22 +1,13 @@
 import { navigate } from "../router.js";
 
-export function mountLandingView(root) {
+export function mountLandingView(container) {
 
-    root.innerHTML = `
-        <div class="hero">
-
-            <div class="title">
-                Architecture Observatory
-            </div>
-
-            <div class="subtitle">
-                Runtime intelligence platform for observing,
-                simulating, and explaining system behaviour.
-            </div>
-
-            <div style="margin-top:20px; display:flex; gap:10px;">
-
-                <button id="enter-runtime">
+    container.innerHTML = `
+        <h1 style="color:white;">
+            LANDING
+        </h1>
+    `;
+}
                     Enter Runtime
                 </button>
 
