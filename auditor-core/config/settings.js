@@ -1,85 +1,53 @@
 // ========================================
-// ARCHITECTURE OBSERVATORY
-// GLOBAL SETTINGS
+// SYSTEM CONFIG
+// ========================================
+//
+// Central control plane for all runtime behaviour
+//
 // ========================================
 
-export const SETTINGS = {
+export const CONFIG = {
 
-    // =========================
-    // SYSTEM
-    // =========================
     APP_NAME: "Architecture Observatory",
-    VERSION: "V5",
 
-    // =========================
-    // TRACE
-    // =========================
-    TRACE_LIMIT: 5000,
-    TRACE_ENABLED: true,
-    TRACE_STACKS: true,
+    VERSION: "V4-REBOOT",
 
-    // =========================
-    // PERFORMANCE
-    // =========================
-    PERFORMANCE_MONITORING: true,
-    FPS_MONITORING: true,
-    MEMORY_MONITORING: true,
+    MODE: "DEV", // DEV | PORTABLE | SIMULATION | SAFE_RUNTIME
 
-    // =========================
-    // ANALYSIS
-    // =========================
-    ENABLE_ANOMALY_DETECTION: true,
-    ENABLE_ROOT_CAUSE_ENGINE: true,
-    ENABLE_COUPLING_ANALYSIS: true,
-    ENABLE_HEATMAP_ANALYSIS: true,
+    FEATURES: {
 
-    // =========================
-    // VIEWER
-    // =========================
-    MOBILE_MODE: false,
-    DEVTOOLS_ENABLED: true,
-    LIVE_GRAPH_ENABLED: true,
-    AUTO_SCROLL_TRACE: true,
+        runtimeReasoningOS: true,
+        metaReasoningKernel: true,
+        predictiveFailureEngine: true,
+        selfHealingEngine: true,
 
-    // =========================
-    // BUILD
-    // =========================
-    BUILD_MODE: "dev",
-    PORTABLE_MODE: false,
+        simulationUniverse: true,
+        autopilotController: true,
 
-    // =========================
-    // STORAGE
-    // =========================
-    ENABLE_PERSISTENCE: true,
-    MAX_SNAPSHOTS: 25,
+        narrativeEngine: true,
+        debugAgent: true
+    },
 
-    // =========================
-    // PWA
-    // =========================
-    PWA_ENABLED: true,
-    OFFLINE_MODE: true,
+    PERFORMANCE: {
 
-    // =========================
-    // DEBUG
-    // =========================
-    DEBUG: true,
-    VERBOSE_LOGGING: true
-};
+        reasoningInterval: 4000,
+        autopilotInterval: 3000,
+        consciousnessInterval: 5000,
+        simulationThrottle: 1
+    },
 
-export function updateSetting(key, value) {
+    SAFETY: {
 
-    if (!(key in SETTINGS)) {
+        allowSelfModification: false,
+        allowAutoPatchExecution: false,
+        allowStateMutationFromAI: false
+    },
 
-        console.warn(`Unknown setting: ${key}`);
-        return;
+    UI: {
+
+        mountDebugPanel: true,
+        mountNarrativeEngine: true,
+        mountMobileViewer: true,
+        mountSimulationDashboard: true
     }
-
-    SETTINGS[key] = value;
-
-    console.log(`[SETTINGS] ${key} updated →`, value);
-}
-
-export function getSetting(key) {
-
-    return SETTINGS[key];
-}
+};
