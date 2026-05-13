@@ -8,6 +8,8 @@ window.onerror = (msg, src, line) => {
     `;
 };
 
+<div id="app-root"></div>
+
 document.body.innerHTML = "BOOT OK - LOADING ROUTER...";
 
 import { initRouter }
