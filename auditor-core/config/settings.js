@@ -1,53 +1,16 @@
 // ========================================
-// SYSTEM CONFIG
-// ========================================
-//
-// Central control plane for all runtime behaviour
-//
+// USER / SYSTEM SETTINGS
 // ========================================
 
-export const CONFIG = {
+export const SETTINGS = {
 
     APP_NAME: "Architecture Observatory",
 
-    VERSION: "V4-REBOOT",
+    THEME: "dark",
 
-    MODE: "DEV", // DEV | PORTABLE | SIMULATION | SAFE_RUNTIME
+    LOG_LEVEL: "verbose",
 
-    FEATURES: {
+    ENABLE_TRACING: true,
 
-        runtimeReasoningOS: true,
-        metaReasoningKernel: true,
-        predictiveFailureEngine: true,
-        selfHealingEngine: true,
-
-        simulationUniverse: true,
-        autopilotController: true,
-
-        narrativeEngine: true,
-        debugAgent: true
-    },
-
-    PERFORMANCE: {
-
-        reasoningInterval: 4000,
-        autopilotInterval: 3000,
-        consciousnessInterval: 5000,
-        simulationThrottle: 1
-    },
-
-    SAFETY: {
-
-        allowSelfModification: false,
-        allowAutoPatchExecution: false,
-        allowStateMutationFromAI: false
-    },
-
-    UI: {
-
-        mountDebugPanel: true,
-        mountNarrativeEngine: true,
-        mountMobileViewer: true,
-        mountSimulationDashboard: true
-    }
+    SAFE_MODE: true
 };
