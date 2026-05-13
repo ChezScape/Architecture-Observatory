@@ -99,25 +99,12 @@ export function navigate(route) {
 
 export function initRouter() {
 
-    const route =
-        location.hash
-            .replace("#", "")
-            || "landing";
+    const root =
+        document.getElementById("app-root");
 
-    navigate(route);
+    console.log("ROOT:", root);
 
-    window.addEventListener(
-        "popstate",
-        () => {
-
-            const route =
-                location.hash
-                    .replace("#", "")
-                    || "landing";
-
-            navigate(route);
-        }
-    );
+    root.innerHTML = "ROUTER LOADED";
 }
 try {
     view(root);
