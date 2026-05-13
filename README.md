@@ -1,29 +1,18 @@
-# Architecture-Observatory
+## 📊 Live Architecture Map
 
-auditor-core/
-  static/
-    domGraph.js
-    jsGraph.js
-    cssGraph.js
+```mermaid
+graph TD
 
-  runtime/
-    tracer.js
-    domInterceptor.js
-    eventInterceptor.js
-    stateTracker.js
+A[Runtime Events] --> B[Instrumentation Layer]
+B --> C[Causal Graph Engine]
+C --> D[Analysis Layer]
+D --> E[Prediction Engine]
+D --> F[Insight Engine]
+E --> G[Reasoning OS]
+F --> G
+G --> H[Simulation Universe]
+H --> I[Explanation Engine]
+I --> J[UI Dashboard]
 
-  pipeline/
-    instrumenter.js
-    executionRecorder.js
-
-  analysis/
-    couplingEngine.js
-    rootCauseEngine.js
-    anomalyDetector.js
-
-  output/
-    graphBuilder.js
-    explanationEngine.js
-
-  viewer/
-    traceViewer.js
+G --> K[Meta Reasoning Kernel]
+K --> D
