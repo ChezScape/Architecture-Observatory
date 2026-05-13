@@ -11,6 +11,23 @@ import { PortableSandbox }
 import { PortableAnalysisBridge }
     from "../analysis/portableAnalysisBridge.js";
 
+import { mountUploadPanel }
+from "./viewer/uploadPanel.js";
+
+export function mountRuntimeView(root) {
+
+    root.innerHTML = "";
+
+    const container =
+        document.createElement("div");
+
+    container.style.padding = "20px";
+
+    root.appendChild(container);
+
+    mountUploadPanel(container);
+}
+
 export function mountUploadPanel(root) {
 
     const panel =
