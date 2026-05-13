@@ -1,19 +1,44 @@
 // ========================================
-// ARCHITECTURE OBSERVATORY
 // APPLICATION ROUTER
 // ========================================
 
-import { mountLandingView }
-    from "./landing/landingView.js";
-
 import { mountRuntimeView }
-    from "./auditor-core/runtimeView.js";
+from "./auditor-core/runtimeView.js";
 
-import { mountSandboxView }
-    from "./sandbox/sandboxView.js";
+// ========================================
+// LANDING VIEW
+// ========================================
 
-import { Trace }
-    from "./auditor-core/runtime/tracer.js";
+function mountLandingView(root) {
+
+    root.innerHTML = `
+        <div class="hero">
+
+            <div class="title">
+                🧠 Architecture Observatory
+            </div>
+
+            <div class="subtitle">
+                Runtime architecture analysis
+                and portable HTML auditing.
+            </div>
+
+            <br>
+
+            <button id="runtime-btn">
+                Enter Runtime
+            </button>
+
+        </div>
+    `;
+
+    root
+        .querySelector("#runtime-btn")
+        .onclick = () => {
+
+            navigate("runtime");
+        };
+}
 
 // ========================================
 // ROUTES
@@ -23,9 +48,7 @@ const routes = {
 
     landing: mountLandingView,
 
-    runtime: mountRuntimeView,
-
-    sandbox: mountSandboxView
+    runtime: mountRuntimeView
 };
 
 // ========================================
@@ -35,46 +58,43 @@ const routes = {
 export function navigate(route) {
 
     const root =
-        document.getElementById("app-root");
+        document.getElementById(
+            "app-root"
+        );
 
     if (!root) return;
 
-    const view = routes[route];
+    const view =
+        routes[route];
 
     if (!view) {
 
         root.innerHTML = `
-            <div class="error-view">
-                Unknown Route: ${route}
+            <div style="
+                color:white;
+                padding:40px;
+            ">
+                Route not found:
+                ${route}
             </div>
         `;
 
         return;
     }
 
-    // CLEANUP
     root.innerHTML = "";
 
-    // TRACE
-    Trace.log({
-        type: "ROUTE_CHANGE",
-        source: "Router",
-        message: `Navigated to ${route}`
-    });
-
-    // URL
     history.pushState(
         {},
         "",
         `#${route}`
     );
 
-    // MOUNT
     view(root);
 }
 
 // ========================================
-// INIT
+// INITIALISE
 // ========================================
 
 export function initRouter() {
