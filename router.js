@@ -1,126 +1,18 @@
-// ========================================
-// APPLICATION ROUTER
-// ========================================
-
-import { mountRuntimeView }
-from "./auditor-core/runtimeView.js";
-
-// ========================================
-// LANDING VIEW
-// ========================================
-
-function mountLandingView(root) {
-
-    root.innerHTML = `
-        <div class="hero">
-
-            <div class="title">
-                🧠 Architecture Observatory
-            </div>
-
-            <div class="subtitle">
-                Runtime architecture analysis
-                and portable HTML auditing.
-            </div>
-
-            <br>
-
-            <button id="runtime-btn">
-                Enter Runtime
-            </button>
-
-        </div>
-    `;
-
-    root
-        .querySelector("#runtime-btn")
-        .onclick = () => {
-
-            navigate("runtime");
-        };
-}
-
-// ========================================
-// ROUTES
-// ========================================
-
-const routes = {
-
-    landing: mountLandingView,
-
-    runtime: mountRuntimeView
-};
-
-// ========================================
-// NAVIGATION
-// ========================================
-
-export function navigate(route) {
-
-    const root =
-        document.getElementById(
-            "app-root"
-        );
-
-    if (!root) return;
-
-    const view =
-        routes[route];
-
-    if (!view) {
-
-        root.innerHTML = `
-            <div style="
-                color:white;
-                padding:40px;
-            ">
-                Route not found:
-                ${route}
-            </div>
-        `;
-
-        return;
-    }
-
-    root.innerHTML = "";
-
-    history.pushState(
-        {},
-        "",
-        `#${route}`
-    );
-
-    view(root);
-}
-
-// ========================================
-// INITIALISE
-// ========================================
-
-// APPLICATION ROUTER (TEST MODE)
-
 export function initRouter() {
 
     const root =
         document.getElementById("app-root");
 
     if (!root) {
-        document.body.innerHTML = "NO ROOT";
+        console.error("NO ROOT FOUND");
         return;
     }
 
-    root.innerHTML = `
-        <h1 style="color:white;">
-            LANDING VIEW LOADED ✔
-        </h1>
-    `;
-}(debug);
-
-    if (!root) return;
+    // NEVER TOUCH document.body
 
     root.innerHTML = `
-        <h1 style="color:white;">
-            LANDING VIEW LOADED ✔
-        </h1>
+        <div style="color:white;padding:20px;">
+            <h1>LANDING VIEW LOADED ✔</h1>
+        </div>
     `;
 }
