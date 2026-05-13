@@ -1,18 +1,21 @@
 window.onerror = (msg, src, line) => {
     document.body.innerHTML = `
         <div style="color:white;padding:20px;">
-            <h2>CRASH DETECTED</h2>
+            <h2>CRASH</h2>
             <div>${msg}</div>
             <div>${src}:${line}</div>
         </div>
     `;
 };
 
-<div id="app-root"></div>
+document.body.innerHTML = `
+    <div style="color:white;padding:20px;">
+        APP STARTED
+    </div>
+`;
 
-document.body.innerHTML = "BOOT OK - LOADING ROUTER...";
+import { initRouter } from "./router.js";
 
-import { initRouter }
-from "./router.js";
+console.log("IMPORT OK");
 
 initRouter();
