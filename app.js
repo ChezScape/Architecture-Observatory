@@ -1,17 +1,14 @@
-window.onerror = (msg, src, line) => {
-    document.body.innerHTML = `
-        <div style="color:white;padding:20px;">
-            <h2>CRASH</h2>
-            <div>${msg}</div>
-        </div>
-    `;
-};
+console.log("APP START");
 
 setTimeout(() => {
 
+    const root =
+        document.getElementById("app-root");
+
     document.body.innerHTML = `
         <div style="color:white;padding:20px;">
-            APP STILL ALIVE AFTER 2S
+            ROOT CHECK AFTER 2s:<br>
+            ${root}
         </div>
     `;
 
