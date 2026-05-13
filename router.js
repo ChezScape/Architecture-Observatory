@@ -97,25 +97,33 @@ export function navigate(route) {
 // INITIALISE
 // ========================================
 
+// APPLICATION ROUTER (TEST MODE)
+
 export function initRouter() {
 
     const root =
         document.getElementById("app-root");
 
-    console.log("ROOT:", root);
+    document.body.innerHTML = "";
 
-    root.innerHTML = "ROUTER LOADED";
-}
-try {
-    view(root);
-} catch (err) {
+    const debug =
+        document.createElement("div");
 
-    console.error(err);
+    debug.style.color = "white";
+    debug.style.padding = "20px";
+
+    debug.innerHTML = `
+        ROUTER CALLED ✔<br>
+        ROOT FOUND: ${!!root}
+    `;
+
+    document.body.appendChild(debug);
+
+    if (!root) return;
 
     root.innerHTML = `
-        <div style="color:white;padding:20px;">
-            <h2>Runtime Crash</h2>
-            <pre>${err.message}</pre>
-        </div>
+        <h1 style="color:white;">
+            LANDING VIEW LOADED ✔
+        </h1>
     `;
 }
