@@ -104,20 +104,17 @@ export function initRouter() {
     const root =
         document.getElementById("app-root");
 
-    document.body.innerHTML = "";
+    if (!root) {
+        document.body.innerHTML = "NO ROOT";
+        return;
+    }
 
-    const debug =
-        document.createElement("div");
-
-    debug.style.color = "white";
-    debug.style.padding = "20px";
-
-    debug.innerHTML = `
-        ROUTER CALLED ✔<br>
-        ROOT FOUND: ${!!root}
+    root.innerHTML = `
+        <h1 style="color:white;">
+            LANDING VIEW LOADED ✔
+        </h1>
     `;
-
-    document.body.appendChild(debug);
+}(debug);
 
     if (!root) return;
 
