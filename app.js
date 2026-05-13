@@ -3,8 +3,14 @@
 // APPLICATION ROOT
 // ========================================
 
-import { initRouter } from "./router.js";
+import { BootDiagnostics }
+from "./auditor-core/boot/bootDiagnostics.js";
 
+BootDiagnostics.init();
+BootDiagnostics.log("APP_START");
+
+import { initRouter } from "./router.js";
+BootDiagnostics.log("ROUTER_LOADING");
 import { Trace } from "./auditor-core/runtime/tracer.js";
 import { EVENTS } from "./auditor-core/runtime/eventTypes.js";
 
