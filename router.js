@@ -1,18 +1,27 @@
 export function initRouter() {
 
+    console.log("ROUTER EXECUTING ✔");
+
     const root =
         document.getElementById("app-root");
 
-    if (!root) {
-        console.error("NO ROOT FOUND");
-        return;
-    }
+    console.log("ROOT =", root);
 
-    // NEVER TOUCH document.body
+    if (!root) return;
+
+    // HARD VISUAL OVERRIDE
+    document.body.style.background = "#000";
+
+    root.style.position = "relative";
+    root.style.zIndex = "9999";
 
     root.innerHTML = `
-        <div style="color:white;padding:20px;">
-            <h1>LANDING VIEW LOADED ✔</h1>
+        <div style="
+            color:white;
+            padding:40px;
+            font-size:24px;
+        ">
+            🚀 ROUTER SUCCESSFULLY RENDERED INTO ROOT
         </div>
     `;
 }
