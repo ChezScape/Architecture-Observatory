@@ -1,23 +1,367 @@
-body {
-    margin: 0;
-    background: #0f0f0f;
-    color: #ffffff;
-    font-family: monospace;
+/* ========================================
+   ARCHITECTURE OBSERVATORY
+   RUNTIME HUD STYLE
+======================================== */
+
+:root {
+
+    --bg:
+        #05060a;
+
+    --panel:
+        rgba(11, 20, 48, 0.88);
+
+    --panel-border:
+        rgba(94, 234, 212, 0.18);
+
+    --text:
+        #d7e1ff;
+
+    --accent:
+        #5eead4;
+
+    --danger:
+        #ff5c7a;
+
+    --warning:
+        #ffd166;
+
+    --glow:
+        0 0 18px rgba(94,234,212,0.25);
 }
 
-.devtools-panel {
-    border: 1px solid #333;
-    padding: 12px;
-    margin: 12px;
-    border-radius: 12px;
-    background: #181818;
+/* ========================================
+   GLOBAL
+======================================== */
+
+* {
+    box-sizing: border-box;
 }
+
+html,
+body {
+
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    min-height: 100%;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #0b1430,
+            #05060a
+        );
+
+    color: var(--text);
+
+    font-family:
+        Inter,
+        system-ui,
+        sans-serif;
+
+    overflow-x: hidden;
+}
+
+/* ========================================
+   APP ROOT
+======================================== */
+
+#app-root {
+
+    min-height: 100vh;
+
+    padding: 20px;
+}
+
+/* ========================================
+   GRID
+======================================== */
+
+.grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(320px, 1fr)
+        );
+
+    gap: 18px;
+
+    width: 100%;
+}
+
+/* ========================================
+   PANELS
+======================================== */
+
+.panel,
+.card {
+
+    background:
+        var(--panel);
+
+    border:
+        1px solid var(--panel-border);
+
+    border-radius: 18px;
+
+    padding: 18px;
+
+    backdrop-filter:
+        blur(10px);
+
+    box-shadow:
+        var(--glow);
+
+    transition:
+        transform 0.2s ease,
+        border 0.2s ease;
+}
+
+.panel:hover,
+.card:hover {
+
+    transform:
+        translateY(-2px);
+
+    border-color:
+        rgba(94,234,212,0.4);
+}
+
+/* ========================================
+   HUD BAR
+======================================== */
+
+.hud-bar {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+
+    padding: 16px;
+
+    background:
+        rgba(255,255,255,0.03);
+
+    border:
+        1px solid rgba(255,255,255,0.08);
+
+    border-radius: 16px;
+}
+
+/* ========================================
+   BUTTONS
+======================================== */
 
 button {
-    background: #222;
-    border: 1px solid #444;
-    color: white;
-    padding: 10px 14px;
-    border-radius: 8px;
+
+    background:
+        rgba(94,234,212,0.08);
+
+    color:
+        var(--accent);
+
+    border:
+        1px solid rgba(94,234,212,0.35);
+
+    border-radius: 12px;
+
+    padding:
+        10px 16px;
+
     cursor: pointer;
+
+    transition:
+        all 0.2s ease;
+}
+
+button:hover {
+
+    background:
+        rgba(94,234,212,0.18);
+
+    transform:
+        translateY(-1px);
+}
+
+/* ========================================
+   INPUTS
+======================================== */
+
+input,
+textarea {
+
+    width: 100%;
+
+    background:
+        rgba(0,0,0,0.3);
+
+    color:
+        white;
+
+    border:
+        1px solid rgba(255,255,255,0.1);
+
+    border-radius: 10px;
+
+    padding: 12px;
+
+    margin-top: 10px;
+}
+
+/* ========================================
+   HERO
+======================================== */
+
+.hero {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+}
+
+.title {
+
+    font-size: 48px;
+
+    font-weight: 800;
+
+    text-shadow:
+        0 0 25px rgba(94,234,212,0.3);
+}
+
+.subtitle {
+
+    max-width: 650px;
+
+    opacity: 0.72;
+
+    margin-top: 12px;
+
+    line-height: 1.5;
+}
+
+/* ========================================
+   BOOT OVERLAY
+======================================== */
+
+#boot-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        #05060a;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 99999;
+
+    transition:
+        opacity 0.6s ease;
+}
+
+.boot-container {
+
+    text-align: center;
+}
+
+.boot-title {
+
+    font-size: 32px;
+
+    font-weight: 700;
+}
+
+.boot-subtitle {
+
+    opacity: 0.6;
+
+    margin-top: 10px;
+}
+
+.boot-loader {
+
+    width: 140px;
+    height: 6px;
+
+    margin-top: 20px;
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--accent),
+            transparent
+        );
+
+    animation:
+        pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+
+    0% {
+        opacity: 0.3;
+        transform: scaleX(0.8);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+
+    100% {
+        opacity: 0.3;
+        transform: scaleX(0.8);
+    }
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 768px) {
+
+    .title {
+
+        font-size: 34px;
+    }
+
+    .grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+    .hud-bar {
+
+        flex-direction: column;
+
+        gap: 12px;
+    }
 }
