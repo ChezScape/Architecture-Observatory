@@ -1,10 +1,10 @@
 // ========================================
-// PORTABLE HTML LOADER
+// PORTABLE LOADER
 // ========================================
 
-export class PortableLoader {
+export const PortableLoader = {
 
-    static async load(file) {
+    async load(file) {
 
         return new Promise((resolve, reject) => {
 
@@ -24,4 +24,4 @@ export class PortableLoader {
             reader.readAsText(file);
         });
     }
-}
+};
