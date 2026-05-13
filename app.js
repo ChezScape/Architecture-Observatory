@@ -1,242 +1,107 @@
-import { SETTINGS } from "./auditor-core/config/settings.js";
+// ========================================
+// SYSTEM BOOT ORCHESTRATOR
+// ========================================
 
+import { CONFIG } from "./auditor-core/config/config.js";
+
+import { RuntimeStore } from "./auditor-core/runtime/runtimeStore.js";
+import { Trace } from "./auditor-core/runtime/tracer.js";
 import { EVENTS } from "./auditor-core/runtime/eventTypes.js";
 
-import { Trace } from "./auditor-core/runtime/tracer.js";
+// CORE SYSTEMS
+import { RuntimeAutonomousReasoningOS } from "./auditor-core/runtime/runtimeAutonomousReasoningOS.js";
+import { RuntimeAutopilotController } from "./auditor-core/runtime/runtimeAutopilotController.js";
+import { RuntimeConsciousnessLoop } from "./auditor-core/runtime/runtimeConsciousnessLoop.js";
 
-import {
-    safeExecute
-} from "./auditor-core/runtime/errorBoundary.js";
+// ANALYSIS
+import { InsightAIEngine } from "./auditor-core/analysis/insightAIEngine.js";
+import { PredictiveFailureEngine } from "./auditor-core/analysis/predictiveFailureEngine.js";
 
-import { Observatory } from "./auditor-core/index.js";
-
+// UI
 import { mountDevTools } from "./auditor-core/viewer/devtoolsPanel.js";
-
 import { mountSwitchButton } from "./auditor-core/viewer/switchButton.js";
-
 import { mountBuildDashboard } from "./auditor-core/viewer/buildDashboard.js";
-
 import { mountMobileViewer } from "./auditor-core/viewer/mobileViewer.js";
+import { mountFullAutonomousDebugAgent } from "./auditor-core/viewer/fullAutonomousDebugAgent.js";
 
-// ========================================
-// SYSTEM BOOT TRACE
-// ========================================
-
+// START BOOT TRACE
 Trace.log({
     type: EVENTS.SYSTEM_BOOT,
-    message: `${SETTINGS.APP_NAME} booting`,
-    timestamp: Date.now()
+    message: `${CONFIG.APP_NAME} booting in ${CONFIG.MODE} mode`
 });
 
 // ========================================
-// SAFE OBSERVATORY STARTUP
+// 1. INITIALISE CORE STORE
 // ========================================
 
-safeExecute("observatory_boot", () => {
+RuntimeStore.init?.();
 
-    // ========================================
-    // START CORE OBSERVATORY
-    // ========================================
+// ========================================
+// 2. START CORE REASONING LAYERS
+// (ORDER MATTERS — THIS FIXES YOUR ISSUE)
+// ========================================
 
-    Observatory.start();
+if (CONFIG.FEATURES.runtimeReasoningOS) {
+    RuntimeAutonomousReasoningOS.start(CONFIG.PERFORMANCE.reasoningInterval);
+}
 
-    // ========================================
-    // REGISTER PWA SERVICE WORKER
-    // ========================================
+if (CONFIG.FEATURES.autopilotController) {
+    RuntimeAutopilotController.start(CONFIG.PERFORMANCE.autopilotInterval);
+}
 
-    if ("serviceWorker" in navigator) {
+if (CONFIG.FEATURES.metaReasoningKernel) {
+    RuntimeConsciousnessLoop.start(CONFIG.PERFORMANCE.consciousnessInterval);
+}
 
-        navigator.serviceWorker
-            .register("./pwa/service-worker.js")
+// ========================================
+// 3. OPTIONAL PRE-WARM ANALYSIS
+// ========================================
 
-            .then(() => {
+InsightAIEngine.analyse();
+PredictiveFailureEngine.analyse();
 
-                Trace.log({
-                    type: EVENTS.SYSTEM_READY,
-                    category: "service_worker",
-                    message: "Service worker registered",
-                    timestamp: Date.now()
-                });
+// ========================================
+// 4. REGISTER PWA (SAFE)
+// ========================================
 
-            })
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./pwa/service-worker.js");
+}
 
-            .catch((err) => {
+// ========================================
+// 5. UI BOOT (LAST STEP ONLY)
+// ========================================
 
-                Trace.log({
-                    type: EVENTS.ERROR,
-                    category: "service_worker",
-                    message: err.message,
-                    timestamp: Date.now()
-                });
+const root = document.body;
 
-            });
-    }
+// MODE SWITCH
+mountSwitchButton(root, (mode) => {
+    CONFIG.MODE = mode;
+    console.log("System mode switched to:", mode);
+});
 
-    // ========================================
-    // SYSTEM READY TRACE
-    // ========================================
+// CORE DASHBOARD
+mountDevTools(root);
 
-    Trace.log({
-        type: EVENTS.SYSTEM_READY,
-        message: `${SETTINGS.APP_NAME} ready`,
-        timestamp: Date.now()
-    });
+mountBuildDashboard(root, {
+    bundleSize: 0,
+    traceCount: 0,
+    health: "INITIALISING"
+});
 
-    // ========================================
-    // ROOT APP CONTAINER
-    // ========================================
-
-    const root = document.body;
-
-    // ========================================
-    // MODE SWITCH BUTTON
-    // ========================================
-
-    mountSwitchButton(root, (mode) => {
-
-        Trace.log({
-            type: EVENTS.VIEW_CHANGE,
-            category: "build_mode",
-            mode,
-            timestamp: Date.now()
-        });
-
-        console.log("Switched mode:", mode);
-
-    });
-
-    // ========================================
-    // DEVTOOLS PANEL
-    // ========================================
-
-    mountDevTools(root);
-
-    // ========================================
-    // BUILD DASHBOARD
-    // ========================================
-
-    mountBuildDashboard(root, {
-
-        bundleSize: 0,
-
-        traceCount: Trace.get().length,
-
-        health: "OK"
-
-    });
-
-    // ========================================
-    // MOBILE VIEWER
-    // ========================================
-
+// MOBILE VIEW
+if (CONFIG.UI.mountMobileViewer) {
     mountMobileViewer(root);
+}
 
-});
+// FULL DEBUG AGENT
+if (CONFIG.UI.mountDebugPanel) {
+    mountFullAutonomousDebugAgent(root);
+}
 
-// ========================================
-// PWA INSTALL PROMPT
-// ========================================
-
-let deferredPrompt = null;
-
-window.addEventListener("beforeinstallprompt", (e) => {
-
-    e.preventDefault();
-
-    deferredPrompt = e;
-
-    Trace.log({
-        type: EVENTS.PANEL_OPEN,
-        category: "pwa_install_prompt",
-        timestamp: Date.now()
-    });
-
-    // Prevent duplicate install buttons
-    if (document.getElementById("install-btn")) {
-        return;
-    }
-
-    const btn = document.createElement("button");
-
-    btn.id = "install-btn";
-
-    btn.innerText = "Install Observatory";
-
-    // ========================================
-    // BASIC STYLING
-    // ========================================
-
-    btn.style.position = "fixed";
-    btn.style.bottom = "20px";
-    btn.style.right = "20px";
-    btn.style.zIndex = "9999";
-
-    btn.style.padding = "12px";
-    btn.style.borderRadius = "10px";
-
-    btn.style.border = "1px solid #444";
-
-    btn.style.background = "#1f1f1f";
-    btn.style.color = "#ffffff";
-
-    btn.style.cursor = "pointer";
-
-    // ========================================
-    // INSTALL CLICK
-    // ========================================
-
-    btn.onclick = async () => {
-
-        if (!deferredPrompt) {
-            return;
-        }
-
-        deferredPrompt.prompt();
-
-        const result = await deferredPrompt.userChoice;
-
-        Trace.log({
-            type: EVENTS.PANEL_OPEN,
-            category: "pwa_install_result",
-            outcome: result.outcome,
-            timestamp: Date.now()
-        });
-
-        deferredPrompt = null;
-
-        btn.remove();
-    };
-
-    document.body.appendChild(btn);
-
-});
-
-// ========================================
-// WINDOW READY TRACE
-// ========================================
-
-window.addEventListener("load", () => {
-
-    Trace.log({
-        type: EVENTS.SYSTEM_READY,
-        category: "window_load",
-        message: "Window fully loaded",
-        timestamp: Date.now()
-    });
-
-});
-
-// ========================================
-// VISIBILITY TRACKING
-// ========================================
-
-document.addEventListener("visibilitychange", () => {
-
-    Trace.log({
-        type: EVENTS.VIEW_CHANGE,
-        category: "visibility",
-        hidden: document.hidden,
-        timestamp: Date.now()
-    });
-
+// BOOT COMPLETE TRACE
+Trace.log({
+    type: EVENTS.SYSTEM_READY,
+    message: `${CONFIG.APP_NAME} fully initialised`,
+    mode: CONFIG.MODE
 });
