@@ -1,13 +1,24 @@
-const executionStore = [];
+// ========================================
+// EXECUTION RECORDER
+// ========================================
 
-export function recordExecution(event) {
+import { RuntimeStore } from "../runtime/runtimeStore.js";
+import { Trace } from "../runtime/tracer.js";
 
-    executionStore.push({
-        timestamp: Date.now(),
-        ...event
-    });
-}
+export const ExecutionRecorder = {
 
-export function getExecutions() {
-    return executionStore;
-}
+    record(event) {
+
+        const entry = {
+            timestamp: Date.now(),
+            ...event
+        };
+
+        RuntimeStore.pushTrace(entry);
+
+        if (event.type === "ERROR") {
+
+            Trace.error(entry);
+        }
+    }
+};
