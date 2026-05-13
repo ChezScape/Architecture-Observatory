@@ -4,11 +4,12 @@
 
 export class PortableAnalysisBridge {
 
-    static analyse(html) {
+    static analyse(html = "") {
 
         const report = {
 
-            length: html.length,
+            size:
+                html.length,
 
             scripts:
                 (html.match(/<script/gi) || []).length,
@@ -22,42 +23,76 @@ export class PortableAnalysisBridge {
             divs:
                 (html.match(/<div/gi) || []).length,
 
-            possibleInlineEvents:
-                (html.match(/onclick=|onchange=|oninput=/gi) || []).length,
+            inlineEvents:
+                (
+                    html.match(
+                        /onclick=|onchange=|oninput=|onmouseover=/gi
+                    ) || []
+                ).length,
 
-            possibleRisks: []
+            evalUsage:
+                html.includes("eval("),
+
+            innerHTMLUsage:
+                html.includes("innerHTML"),
+
+            possibleRisks: [],
+
+            architectureScore: 100
         };
 
-        // --------------------------------
-        // DETECT COMMON RISKS
-        // --------------------------------
+        // ====================================
+        // RISK DETECTION
+        // ====================================
 
         if (report.scripts > 20) {
 
             report.possibleRisks.push(
-                "High script count detected"
+                "High script count"
             );
+
+            report.architectureScore -= 10;
         }
 
-        if (report.possibleInlineEvents > 10) {
+        if (report.inlineEvents > 10) {
 
             report.possibleRisks.push(
                 "Heavy inline event usage"
             );
+
+            report.architectureScore -= 15;
         }
 
-        if (html.includes("eval(")) {
+        if (report.evalUsage) {
 
             report.possibleRisks.push(
                 "eval() detected"
             );
+
+            report.architectureScore -= 20;
         }
 
-        if (html.includes("innerHTML")) {
+        if (report.innerHTMLUsage) {
 
             report.possibleRisks.push(
-                "innerHTML mutation usage"
+                "innerHTML mutations detected"
             );
+
+            report.architectureScore -= 10;
+        }
+
+        if (report.divs > 300) {
+
+            report.possibleRisks.push(
+                "Possible DOM bloat"
+            );
+
+            report.architectureScore -= 10;
+        }
+
+        if (report.architectureScore < 0) {
+
+            report.architectureScore = 0;
         }
 
         return report;
