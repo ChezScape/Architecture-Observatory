@@ -1,51 +1,93 @@
-import { SETTINGS } from "../config/settings.js";
+// ========================================
+// CENTRAL TRACE ENGINE
+// ========================================
 
-import { EVENTS, isValidEvent } from "./eventTypes.js";
+import { RuntimeStore }
+    from "./runtimeStore.js";
 
-import { Bus } from "./bus.js";
-
-const traceStore = [];
+import { CONFIG }
+    from "../config/config.js";
 
 export const Trace = {
 
-    log(event = {}) {
+    enabled: true,
 
-        if (!SETTINGS.TRACE_ENABLED) {
-            return;
-        }
+    init() {
 
-        if (!isValidEvent(event.type)) {
+        console.log(
+            "[Trace] Initialised"
+        );
+    },
 
-            console.warn("Invalid trace event", event.type);
+    log(payload = {}) {
 
-            event.type = EVENTS.WARNING;
-        }
+        if (!this.enabled) return;
 
-        const payload = {
+        const trace = {
+
+            level: "info",
+
             timestamp: Date.now(),
-            ...event
+
+            ...payload
         };
 
-        traceStore.push(payload);
+        RuntimeStore.pushTrace(trace);
 
-        if (traceStore.length > SETTINGS.TRACE_LIMIT) {
-            traceStore.shift();
-        }
+        if (CONFIG.DEBUG.verboseTracing) {
 
-        Bus.emit(payload);
-
-        RuntimeStore.pushTrace(payload);
-        
-        if (SETTINGS.VERBOSE_LOGGING) {
-            console.log("[TRACE]", payload);
+            console.log(
+                "[TRACE]",
+                trace
+            );
         }
     },
 
-    get() {
-        return traceStore;
+    warn(payload = {}) {
+
+        const trace = {
+
+            level: "warn",
+
+            timestamp: Date.now(),
+
+            ...payload
+        };
+
+        RuntimeStore.pushTrace(trace);
+
+        console.warn(
+            "[WARN]",
+            trace
+        );
+    },
+
+    error(payload = {}) {
+
+        const trace = {
+
+            level: "error",
+
+            timestamp: Date.now(),
+
+            ...payload
+        };
+
+        RuntimeStore.pushTrace(trace);
+
+        console.error(
+            "[ERROR]",
+            trace
+        );
+    },
+
+    getAll() {
+
+        return RuntimeStore.getTraces();
     },
 
     clear() {
-        traceStore.length = 0;
+
+        RuntimeStore.clearTraces();
     }
 };
