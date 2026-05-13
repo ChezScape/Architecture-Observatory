@@ -3,19 +3,16 @@ window.onerror = (msg, src, line) => {
         <div style="color:white;padding:20px;">
             <h2>CRASH</h2>
             <div>${msg}</div>
-            <div>${src}:${line}</div>
         </div>
     `;
 };
 
-document.body.innerHTML = `
-    <div style="color:white;padding:20px;">
-        APP STARTED
-    </div>
-`;
+setTimeout(() => {
 
-import { initRouter } from "./router.js";
+    document.body.innerHTML = `
+        <div style="color:white;padding:20px;">
+            APP STILL ALIVE AFTER 2S
+        </div>
+    `;
 
-console.log("IMPORT OK");
-
-initRouter();
+}, 2000);
