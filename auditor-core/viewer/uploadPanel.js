@@ -3,30 +3,13 @@
 // ========================================
 
 import { PortableLoader }
-    from "../pipeline/portableLoader.js";
+from "../pipeline/portableLoader.js";
 
 import { PortableSandbox }
-    from "../runtime/portableSandbox.js";
+from "../runtime/portableSandbox.js";
 
 import { PortableAnalysisBridge }
-    from "../analysis/portableAnalysisBridge.js";
-
-import { mountUploadPanel }
-from "./viewer/uploadPanel.js";
-
-export function mountRuntimeView(root) {
-
-    root.innerHTML = "";
-
-    const container =
-        document.createElement("div");
-
-    container.style.padding = "20px";
-
-    root.appendChild(container);
-
-    mountUploadPanel(container);
-}
+from "../analysis/portableAnalysisBridge.js";
 
 export function mountUploadPanel(root) {
 
@@ -36,46 +19,52 @@ export function mountUploadPanel(root) {
     panel.className = "panel";
 
     panel.innerHTML = `
-        <h2>Portable HTML Analysis</h2>
+        <h2>
+            Portable HTML Analysis
+        </h2>
 
         <p>
-            Load a portable HTML file into
-            the Observatory runtime.
+            Load a portable HTML file.
         </p>
 
         <input
             type="file"
-            id="portable-input"
+            id="portable-file"
             accept=".html,.htm"
-        />
+        >
 
-        <div id="portable-report"></div>
+        <div id="analysis-output"
+            style="margin-top:20px;">
+        </div>
 
-        <div id="portable-runtime"></div>
+        <div id="sandbox-output"
+            style="margin-top:20px;">
+        </div>
     `;
 
     root.appendChild(panel);
 
     const input =
-        panel.querySelector("#portable-input");
+        panel.querySelector("#portable-file");
 
-    const reportEl =
-        panel.querySelector("#portable-report");
+    const analysisOutput =
+        panel.querySelector("#analysis-output");
 
-    const runtimeEl =
-        panel.querySelector("#portable-runtime");
+    const sandboxOutput =
+        panel.querySelector("#sandbox-output");
+
+    // ====================================
+    // FILE LOAD
+    // ====================================
 
     input.addEventListener(
         "change",
-        async (e) => {
+        async (event) => {
 
             const file =
-                e.target.files[0];
+                event.target.files[0];
 
             if (!file) return;
-
-            reportEl.innerHTML =
-                "<p>Loading...</p>";
 
             try {
 
@@ -84,76 +73,76 @@ export function mountUploadPanel(root) {
                 // ------------------------
 
                 const loaded =
-                    await PortableLoader.load(file);
+                    await PortableLoader
+                        .load(file);
 
                 // ------------------------
                 // ANALYSE
                 // ------------------------
 
-                const analysis =
+                const report =
                     PortableAnalysisBridge
                         .analyse(loaded.html);
 
                 // ------------------------
-                // REPORT
+                // OUTPUT
                 // ------------------------
 
-                reportEl.innerHTML = `
+                analysisOutput.innerHTML = `
                     <div class="card">
 
-                        <div class="card-title">
-                            File
-                        </div>
+                        <h3>
+                            Analysis Report
+                        </h3>
 
-                        <div class="card-value">
+                        <div>
+                            📄 File:
                             ${loaded.name}
                         </div>
 
-                        <br/>
-
                         <div>
                             📏 Size:
-                            ${loaded.size} bytes
+                            ${loaded.size}
                         </div>
 
                         <div>
                             📜 Scripts:
-                            ${analysis.scripts}
+                            ${report.scripts}
                         </div>
 
                         <div>
                             🎨 Styles:
-                            ${analysis.styles}
-                        </div>
-
-                        <div>
-                            🔘 Buttons:
-                            ${analysis.buttons}
+                            ${report.styles}
                         </div>
 
                         <div>
                             📦 Divs:
-                            ${analysis.divs}
+                            ${report.divs}
                         </div>
 
                         <div>
                             ⚠️ Inline Events:
-                            ${analysis.possibleInlineEvents}
+                            ${report.inlineEvents}
                         </div>
-
-                        <br/>
 
                         <div>
-                            <strong>Risks:</strong>
+                            🧠 Architecture Score:
+                            ${report.architectureScore}
                         </div>
+
+                        <br>
+
+                        <strong>
+                            Risks
+                        </strong>
 
                         <ul>
                             ${
-                                analysis.possibleRisks
-                                    .map(r =>
-                                        `<li>${r}</li>`
-                                    )
-                                    .join("")
+                                report.possibleRisks
+                                .map(r =>
+                                    `<li>${r}</li>`
+                                )
+                                .join("")
                             }
                         </ul>
 
@@ -164,11 +153,13 @@ export function mountUploadPanel(root) {
                 // SANDBOX
                 // ------------------------
 
-                runtimeEl.innerHTML = "";
+                sandboxOutput.innerHTML = "";
 
                 const iframe =
                     PortableSandbox
-                        .create(runtimeEl);
+                        .create(
+                            sandboxOutput
+                        );
 
                 PortableSandbox.inject(
                     iframe,
@@ -179,7 +170,7 @@ export function mountUploadPanel(root) {
 
                 console.error(err);
 
-                reportEl.innerHTML = `
+                analysisOutput.innerHTML = `
                     <div class="card">
                         Failed to load file.
                     </div>
