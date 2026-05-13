@@ -11,9 +11,14 @@ from "./viewer/uploadPanel.js";
 import { mountBuildDashboard }
 from "./viewer/buildDashboard.js";
 
-export function mountRuntimeView(root) {
+export function mountRuntimeView(container) {
 
-    root.innerHTML = "";
+    container.innerHTML = `
+        <h1 style="color:white;">
+            RUNTIME
+        </h1>
+    `;
+}
 
     // ====================================
     // CONTAINER
