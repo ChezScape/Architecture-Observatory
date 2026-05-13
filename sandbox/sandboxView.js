@@ -1,25 +1,13 @@
 import { navigate } from "../router.js";
 
-export function mountSandboxView(root) {
+export function mountSandboxView(container) {
 
-    root.innerHTML = `
-        <div style="padding:20px">
-
-            <h2>Sandbox</h2>
-
-            <p>Inject runtime simulation events</p>
-
-            <textarea id="sandbox-input"
-                style="
-                    width:100%;
-                    height:200px;
-                    background:#0b1430;
-                    color:white;
-                    border:1px solid #333;
-                    padding:10px;
-                "
-            >
-{ "type": "CLICK", "value": "test_event" }
+    container.innerHTML = `
+        <h1 style="color:white;">
+            SANDBOX
+        </h1>
+    `;
+} "type": "CLICK", "value": "test_event" }
             </textarea>
 
             <br/><br/>
