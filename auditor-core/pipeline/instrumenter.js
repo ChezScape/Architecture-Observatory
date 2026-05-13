@@ -1,11 +1,41 @@
+// ========================================
+// PIPELINE INSTRUMENTOR
+// ========================================
+
+import { Bus } from "../runtime/bus.js";
 import { Trace } from "../runtime/tracer.js";
 
-import { EVENTS } from "../runtime/eventTypes.js";
+export const Instrumentor = {
 
-export function startPipeline() {
+    active: false,
 
-    Trace.log({
-        type: EVENTS.PIPELINE_START,
-        message: "Pipeline started"
-    });
-}
+    init() {
+
+        this.active = true;
+
+        Trace.log({
+            type: "INSTRUMENTOR_INIT",
+            source: "Instrumentor"
+        });
+    },
+
+    instrumentHTML(html) {
+
+        if (!this.active) return html;
+
+        // Lightweight instrumentation injection
+        const probe = `
+            <script>
+                window.__OBSERVATORY_ACTIVE__ = true;
+
+                window.addEventListener("error", (e) => {
+                    console.error("[OBSERVATORY ERROR]", e.message);
+                });
+            </script>
+        `;
+
+        Bus.emit("instrumentation:html", { html });
+
+        return probe + html;
+    }
+};
