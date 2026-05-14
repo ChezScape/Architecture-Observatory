@@ -2,43 +2,53 @@ export function mountSandboxView(root) {
 
     root.innerHTML = `
         <div class="hud-bar">
-
-            <div>
-                Sandbox Environment
-            </div>
-
-            <div class="status warning">
-                ISOLATED
-            </div>
-
+            <div>Sandbox Environment</div>
+            <div class="status warning">ISOLATED</div>
         </div>
 
         <div class="panel">
 
             <h2>Input Console</h2>
 
-            <p>
-                Paste architecture definitions, runtime logs,
-                or experimental modules below.
-            </p>
+            <textarea id="input" rows="10" style="width:100%;"></textarea>
 
-            <textarea
-                rows="10"
-                placeholder="Enter data..."
-                style="
-                    margin-top: 12px;
-                    width: 100%;
-                "
-            ></textarea>
+            <button id="run" style="margin-top:12px;">
+                Execute
+            </button>
 
-            <div style="margin-top: 12px;">
+            <h3 style="margin-top:20px;">Output</h3>
 
-                <button onclick="alert('Sandbox execution placeholder')">
-                    Execute
-                </button>
-
-            </div>
+            <pre id="output" style="
+                background: rgba(0,0,0,0.3);
+                padding: 12px;
+                border-radius: 10px;
+                min-height: 100px;
+            "></pre>
 
         </div>
     `;
+
+    const input =
+        root.querySelector("#input");
+
+    const output =
+        root.querySelector("#output");
+
+    root.querySelector("#run")
+        .addEventListener("click", () => {
+
+            const value =
+                input.value.trim();
+
+            if (!value) {
+
+                output.textContent =
+                    "No input provided";
+
+                return;
+            }
+
+            output.textContent =
+                "EXECUTED:\n\n" + value;
+        });
 }
