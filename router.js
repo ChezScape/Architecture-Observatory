@@ -1,57 +1,42 @@
-// ======================================
-// ROUTER (ONLY DOM OWNER)
-// ======================================
+export function navigate(route) {
 
-import { mountLandingView } from "./viewer/landingView.js";
-import { mountRuntimeView } from "./viewer/runtimeView.js";
-import { mountSandboxView } from "./viewer/sandbox.js";
-
-export function initRouter() {
+    console.log(
+        "ROUTE:",
+        route
+    );
 
     const root =
-        document.getElementById("app-root");
+        document.getElementById(
+            "app-root"
+        );
 
     if (!root) {
-        console.error("NO APP ROOT FOUND");
+
+        console.error(
+            "ROOT NOT FOUND"
+        );
+
         return;
     }
 
     root.innerHTML = `
-        <div id="view-container"></div>
+        <div style="
+            color:white;
+            padding:40px;
+            font-family:sans-serif;
+        ">
+            <h1>
+                Architecture Observatory
+            </h1>
+
+            <p>
+                Router working successfully.
+            </p>
+
+            <p>
+                Current route:
+                ${route}
+            </p>
+        </div>
     `;
-
-    navigate("landing");
-}
-
-export function navigate(route) {
-
-    const container =
-        document.getElementById("view-container");
-
-    if (!container) {
-        console.error("NO VIEW CONTAINER");
-        return;
-    }
-
-    switch (route) {
-
-        case "landing":
-            mountLandingView(container);
-            break;
-
-        case "runtime":
-            mountRuntimeView(container);
-            break;
-
-        case "sandbox":
-            mountSandboxView(container);
-            break;
-
-        default:
-            container.innerHTML = `
-                <div style="color:white;">
-                    Unknown route: ${route}
-                </div>
-            `;
-    }
 }
