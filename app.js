@@ -1,37 +1,23 @@
-import { navigate } from "./router.js";
+// ======================================
+// Architecture Observatory - ENTRY
+// ======================================
 
-console.log("APP STARTED");
+import { navigate } from "./router.js";
 
 window.addEventListener(
     "DOMContentLoaded",
     () => {
-
-        console.log(
-            "DOM LOADED"
-        );
 
         const root =
             document.getElementById(
                 "app-root"
             );
 
-        console.log(
-            "ROOT:",
-            root
-        );
-
         if (!root) {
 
-            document.body.innerHTML = `
-                <div style="
-                    color:white;
-                    background:black;
-                    padding:20px;
-                    font-family:sans-serif;
-                ">
-                    APP ROOT MISSING
-                </div>
-            `;
+            console.error(
+                "APP ROOT NOT FOUND"
+            );
 
             return;
         }
@@ -39,3 +25,7 @@ window.addEventListener(
         navigate("landing");
     }
 );
+
+console.log("APP START");
+
+initRouter();
