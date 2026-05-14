@@ -1,3 +1,86 @@
-<div id="app-root"></div>
+<!DOCTYPE html>
 
-<script type="module" src="./app.js"></script>
+<html lang="en">
+
+<head>
+
+    <!-- ==================================
+         META
+    =================================== -->
+
+    <meta charset="UTF-8" />
+
+    <meta
+        name="viewport"
+        content="
+            width=device-width,
+            initial-scale=1.0
+        "
+    />
+
+    <meta
+        name="theme-color"
+        content="#05060a"
+    />
+
+    <!-- ==================================
+         TITLE
+    =================================== -->
+
+    <title>
+        Architecture Observatory
+    </title>
+
+    <!-- ==================================
+         STYLES
+    =================================== -->
+
+    <link
+        rel="stylesheet"
+        href="./style.css"
+    />
+
+</head>
+
+<body>
+
+    <!-- ==================================
+         APPLICATION ROOT
+    =================================== -->
+
+    <div id="app-root"></div>
+
+    <!-- ==================================
+         BOOT OVERLAY
+    =================================== -->
+
+    <div id="boot-overlay">
+
+        <div class="boot-container">
+
+            <div class="boot-title">
+                Architecture Observatory
+            </div>
+
+            <div class="boot-subtitle">
+                Initialising Runtime Intelligence...
+            </div>
+
+            <div class="boot-loader"></div>
+
+        </div>
+
+    </div>
+
+    <!-- ==================================
+         APPLICATION ENTRY
+    =================================== -->
+
+    <script
+        type="module"
+        src="./app.js"
+    ></script>
+
+</body>
+
+</html>
