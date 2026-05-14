@@ -1,40 +1,19 @@
 export function navigate(route) {
 
-    console.log(
-        "ROUTE:",
-        route
-    );
-
-    const root =
-        document.getElementById(
-            "app-root"
-        );
-
-    if (!root) {
-
-        console.error(
-            "ROOT NOT FOUND"
-        );
-
-        return;
-    }
-
-    root.innerHTML = `
+    document.body.innerHTML = `
         <div style="
+            background:#05060a;
             color:white;
             padding:40px;
             font-family:sans-serif;
+            min-height:100vh;
         ">
             <h1>
-                Architecture Observatory
+                ROUTER WORKING
             </h1>
 
             <p>
-                Router working successfully.
-            </p>
-
-            <p>
-                Current route:
+                Route:
                 ${route}
             </p>
         </div>
